@@ -19,7 +19,7 @@ provider "azurerm" {
 }
 
 locals {
-  cluster_name = concat(var.project_name, var.region)
+  cluster_name = "${var.project_name}${var.region}"
 }
 
 provider "mongodbatlas" {
@@ -63,10 +63,10 @@ resource "mongodbatlas_database_user" "dbUser" {
     value = var.project_name
   }
 
-  scopes {
-    name   = local.cluster_name
-    type = "CLUSTER"
-  }
+  # scopes {
+  #  name   = local.cluster_name
+  #  type = "CLUSTER"
+  # }
 
   depends_on = [mongodbatlas_project.project]
 }
