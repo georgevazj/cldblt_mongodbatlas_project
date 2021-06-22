@@ -74,26 +74,24 @@ resource "mongodbatlas_database_user" "dbUser" {
 resource "mongodbatlas_cluster" "cluster" {
   name = "sandbox"
   project_id = mongodbatlas_project.project.id
-  provider_instance_size_name = "M10"
-  provider_disk_type_name = "P6"
-  provider_name = "AZURE"
-  # Legacy backup
-  backup_enabled = false
-  provider_backup_enabled = true
-
   cluster_type = "REPLICASET"
   replication_specs {
     num_shards = 1
-    region_name = "westeurope"
-    electable_nodes = 3
-    priority        = 7
-    read_only_nodes = 0
+    regions_config {
+      region_name     = "EUROPE_WEST"
+      electable_nodes = 3
+      priority        = 7
+      read_only_nodes = 0
+    }
   }
+  provider_backup_enabled      = true
+  auto_scaling_disk_gb_enabled = true
+  mongo_db_major_version       = "4.2"
 
-  mongo_db_major_version = "4.2"
-  auto_scaling_disk_gb_enabled = false
-  auto_scaling_compute_enabled = true
-  auto_scaling_compute_scale_down_enabled = true
+  //Provider Settings "block"
+  provider_name               = "AZURE"
+  provider_disk_type_name     = "P6"
+  provider_instance_size_name = "M30"
 
   depends_on = [mongodbatlas_project.project]
 }
