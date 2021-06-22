@@ -63,16 +63,16 @@ resource "mongodbatlas_database_user" "dbUser" {
     value = var.project_name
   }
 
-  # scopes {
-  #  name   = local.cluster_name
-  #  type = "CLUSTER"
-  # }
+  scopes {
+    name   = local.cluster_name
+    type = "CLUSTER"
+  }
 
   depends_on = [mongodbatlas_project.project]
 }
 
 resource "mongodbatlas_cluster" "cluster" {
-  name = "sandbox"
+  name = local.cluster_name
   project_id = mongodbatlas_project.project.id
   cluster_type = "REPLICASET"
   replication_specs {
@@ -91,7 +91,7 @@ resource "mongodbatlas_cluster" "cluster" {
   //Provider Settings "block"
   provider_name               = "AZURE"
   provider_disk_type_name     = "P6"
-  provider_instance_size_name = "M30"
+  provider_instance_size_name = "M10"
 
   depends_on = [mongodbatlas_project.project]
 }
